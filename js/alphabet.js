@@ -141,6 +141,7 @@ function startTurn() {
   document.getElementById('alphabet-player-name').textContent = currentPlayer;
   alphabetState.selectedLetter = null;
   renderLettersGrid();
+  updateAlphabetSelectionView();
   renderAlivePlayers();
 
   // Abilita bottoni
@@ -161,7 +162,7 @@ function startTimer() {
     updateTimerUI();
     if (alphabetState.timerLeft <= 0) {
       clearInterval(alphabetState.timerInterval);
-      playerFailed();
+      playerFailed('timeout');
     }
   }, 1000);
 }
@@ -186,6 +187,7 @@ function selectLetter(letter) {
   if (alphabetState.usedLetters.has(letter)) return;
   alphabetState.selectedLetter = letter;
   renderLettersGrid();
+  updateAlphabetSelectionView();
 
   // Abilita "Detto!"
   document.getElementById('btn-said').disabled = false;
@@ -201,6 +203,7 @@ function playerSaid() {
   alphabetState.selectedLetter = null;
 
   renderLettersGrid();
+  updateAlphabetSelectionView();
 
   // Controlla se le lettere sono finite
   const remaining = ALPHABET.filter(l => !alphabetState.usedLetters.has(l));
@@ -214,12 +217,27 @@ function playerSaid() {
   startTurn();
 }
 
-// ✗ Non ce l'ha fatta (timeout o fail manuale)
-function playerFailed() {
+// ✗ Timeout: elimina il giocatore. Pulsante: torna alla griglia senza eliminare.
+function playerFailed(source = 'button') {
+  if (source !== 'timeout') {
+    if (!alphabetState.selectedLetter) return;
+
+    alphabetState.selectedLetter = null;
+    renderLettersGrid();
+    updateAlphabetSelectionView();
+
+    document.getElementById('btn-said').disabled = true;
+    document.getElementById('btn-said').style.opacity = '0.4';
+    return;
+  }
+
   clearInterval(alphabetState.timerInterval);
 
   const alive = alphabetState.alivePlayers;
   const failedPlayer = alive[alphabetState.currentTurn % alive.length];
+
+  alphabetState.selectedLetter = null;
+  updateAlphabetSelectionView();
 
   // Elimina il giocatore
   alphabetState.eliminated.push(failedPlayer);
@@ -284,6 +302,36 @@ function renderLettersGrid() {
     else if (alphabetState.selectedLetter === letter) cls += ' selected';
     return `<div class="${cls}" onclick="selectLetter('${letter}')">${letter}</div>`;
   }).join('');
+}
+
+function updateAlphabetSelectionView() {
+  const grid = document.getElementById('letters-grid');
+  const focus = document.getElementById('alphabet-selected-focus');
+  const focusLetter = document.getElementById('alphabet-selected-letter');
+  const actions = document.getElementById('alphabet-actions');
+  const hasSelection = !!alphabetState.selectedLetter;
+
+  if (hasSelection) {
+    focusLetter.textContent = alphabetState.selectedLetter;
+    grid.style.display = 'none';
+    focus.style.display = 'flex';
+
+    // Retrigger animazione pop ogni volta che una lettera entra in focus.
+    focus.classList.remove('show');
+    void focus.offsetWidth;
+    focus.classList.add('show');
+
+    actions.classList.add('zoomed');
+    actions.classList.remove('zoomed-animate');
+    void actions.offsetWidth;
+    actions.classList.add('zoomed-animate');
+  } else {
+    grid.style.display = 'grid';
+    focus.style.display = 'none';
+    focus.classList.remove('show');
+    actions.classList.remove('zoomed');
+    actions.classList.remove('zoomed-animate');
+  }
 }
 
 function renderAlivePlayers() {

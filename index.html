@@ -160,6 +160,9 @@
 
       <!-- Griglia lettere -->
       <div class="letters-grid" id="letters-grid"></div>
+      <div class="alphabet-focus" id="alphabet-selected-focus" style="display:none;">
+        <div class="alphabet-focus-letter" id="alphabet-selected-letter"></div>
+      </div>
 
       <!-- Giocatori attivi -->
       <div class="section-label" style="margin-top:1.5rem;">In gioco</div>
@@ -171,12 +174,12 @@
         <div id="alphabet-eliminated"></div>
       </div>
 
-      <div style="display:flex; gap:8px; margin-top:1.5rem;">
+      <div class="alphabet-actions" id="alphabet-actions" style="display:flex; gap:8px; margin-top:1.5rem;">
         <button class="btn-next" id="btn-said" onclick="playerSaid()" style="flex:2;">
           ✓ Detto!
         </button>
-        <button class="btn-next" id="btn-skip" onclick="playerFailed()" style="flex:1; color:#c0392b;">
-          ✗ Fail
+        <button class="btn-next" id="btn-skip" onclick="playerFailed('button')" style="flex:1; color:#c0392b;">
+          ↩ Cambia
         </button>
       </div>
 
