@@ -149,6 +149,43 @@ header p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
 }
 .pill.active { background: var(--purple-bg); color: var(--purple-tx); border-color: #AFA9EC; }
 
+/* --- Category picker random + redraw --- */
+.category-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-current {
+  flex: 1;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #cfc9f8;
+  background: linear-gradient(180deg, #f3f1ff 0%, #eeedfe 100%);
+  color: var(--purple-tx);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.category-redraw-btn {
+  min-width: 92px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.category-redraw-btn:active {
+  background: var(--bg);
+}
+
 /* --- Bottone start --- */
 .btn-start {
   display: block;

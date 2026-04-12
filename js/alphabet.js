@@ -42,47 +42,31 @@ const alphabetState = {
   timerLeft:      15,
   timerInterval:  null,
   cat:            null,
-  customCats:     [],   // categorie aggiunte al momento
 };
 
 /* ─────────────────────────────────────────────
    SETUP
    ───────────────────────────────────────────── */
 
-// Costruisce le pill categoria (chiamata da openGame via buildPills non funziona
-// perché usa QUIZ_CATEGORIES — usiamo la nostra funzione dedicata)
-function buildAlphabetPills() {
-  const container = document.getElementById('alphabet-cats');
-  container.innerHTML = '';
-  const allCats = [...ALPHABET_CATEGORIES, ...alphabetState.customCats];
-  // Scegli categoria casuale di default
-  const randomIdx = Math.floor(Math.random() * allCats.length);
-  allCats.forEach((cat, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'pill' + (i === randomIdx ? ' active' : '');
-    btn.textContent = cat;
-    btn.onclick = () => {
-      container.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      alphabetState.cat = cat;
-    };
-    container.appendChild(btn);
-  });
-  alphabetState.cat = allCats[randomIdx];
+function redrawAlphabetCategory() {
+  if (!ALPHABET_CATEGORIES.length) {
+    alphabetState.cat = null;
+    return;
+  }
+  const randomCat = ALPHABET_CATEGORIES[Math.floor(Math.random() * ALPHABET_CATEGORIES.length)];
+  alphabetState.cat = randomCat;
+  const current = document.getElementById('alphabet-current-cat');
+  if (current) current.textContent = randomCat;
 }
 
-function addCustomCategory() {
+function setCustomAlphabetCategory() {
   const input = document.getElementById('alphabet-custom-cat');
   const val = input.value.trim();
   if (!val) return;
-  alphabetState.customCats.push(val);
-  input.value = '';
-  buildAlphabetPills();
-  // Seleziona automaticamente la categoria appena aggiunta
-  const pills = document.querySelectorAll('#alphabet-cats .pill');
-  pills.forEach(p => p.classList.remove('active'));
-  pills[pills.length - 1].classList.add('active');
   alphabetState.cat = val;
+  const current = document.getElementById('alphabet-current-cat');
+  if (current) current.textContent = val;
+  input.value = '';
 }
 
 function setTimer(seconds) {
@@ -94,8 +78,8 @@ function setTimer(seconds) {
 
 // Override di openGame per alphabet (la funzione in app.js chiama buildPills
 // che non sa di ALPHABET_CATEGORIES, quindi intercettiamo qui)
-const _origOpenGame = typeof openGame === 'function' ? openGame : null;
-function openGame(id) {
+const _origOpenGame = typeof window.openGame === 'function' ? window.openGame : null;
+window.openGame = function openGameAlphabet(id) {
   if (id === 'alphabet') {
     openScreen('alphabet');
     document.getElementById('alphabet-setup').style.display = 'block';
@@ -108,12 +92,12 @@ function openGame(id) {
     alphabetState.selectedLetter = null;
     alphabetState.currentTurn   = 0;
     clearInterval(alphabetState.timerInterval);
-    buildAlphabetPills();
+    redrawAlphabetCategory();
     renderPlayerTags('alphabet');
   } else if (_origOpenGame) {
     _origOpenGame(id);
   }
-}
+};
 
 /* ─────────────────────────────────────────────
    INIZIO PARTITA
@@ -124,8 +108,7 @@ function startAlphabet() {
     return;
   }
   if (!alphabetState.cat) {
-    alert('Seleziona una categoria!');
-    return;
+    redrawAlphabetCategory();
   }
 
   alphabetState.alivePlayers = [...alphabetState.players];
@@ -324,8 +307,10 @@ function renderEliminatedPlayers() {
 /* ─── Collega addPlayer al nuovo gioco ─── */
 // app.js gestisce già addPlayer('alphabet') tramite alphabetState.players
 // ma lo stato è separato, quindi usiamo lo stesso pattern ma con alphabetState
-const _origAddPlayer = typeof addPlayer === 'function' ? addPlayer : null;
-function addPlayer(game) {
+const _origAddPlayer = typeof window.addPlayer === 'function' ? window.addPlayer : null;
+const _origRemovePlayer = typeof window.removePlayer === 'function' ? window.removePlayer : null;
+
+window.addPlayer = function addPlayerAlphabet(game) {
   if (game === 'alphabet') {
     const input = document.getElementById('alphabet-player-input');
     const name = input.value.trim();
@@ -338,24 +323,21 @@ function addPlayer(game) {
   } else if (_origAddPlayer) {
     _origAddPlayer(game);
   }
-}
+};
 
-function removePlayer(game, name) {
+window.removePlayer = function removePlayerAlphabet(game, name) {
   if (game === 'alphabet') {
     alphabetState.players = alphabetState.players.filter(p => p !== name);
     renderPlayerTags('alphabet');
-  } else {
-    // chiama la versione originale di app.js
-    state[game].players = state[game].players.filter(p => p !== name);
-    delete state[game].scores[name];
-    renderPlayerTags(game);
+  } else if (_origRemovePlayer) {
+    _origRemovePlayer(game, name);
   }
-}
+};
 
 // Enter su input
 document.addEventListener('DOMContentLoaded', () => {
   const input = document.getElementById('alphabet-player-input');
   if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer('alphabet'); });
   const customInput = document.getElementById('alphabet-custom-cat');
-  if (customInput) customInput.addEventListener('keydown', e => { if (e.key === 'Enter') addCustomCategory(); });
+  if (customInput) customInput.addEventListener('keydown', e => { if (e.key === 'Enter') setCustomAlphabetCategory(); });
 });

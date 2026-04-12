@@ -34,7 +34,14 @@
         <button onclick="addPlayer('quiz')">+</button>
       </div>
       <div class="section-label" style="margin-top:1.5rem;">Categoria</div>
-      <div class="pills" id="quiz-cats"></div>
+      <div class="category-picker">
+        <div class="category-current" id="quiz-current-cat"></div>
+        <button class="category-redraw-btn" onclick="redrawCategory('quiz')">Redraw</button>
+      </div>
+      <div class="add-row" style="margin-top:10px;">
+        <input type="text" id="quiz-custom-cat" placeholder="Oppure scrivi una categoria..." />
+        <button onclick="setCustomCategory('quiz')">Usa</button>
+      </div>
       <button class="btn-start" onclick="startQuiz()">Inizia il quiz</button>
     </div>
     <div id="quiz-game" class="game-panel" style="display:none;">
@@ -68,7 +75,14 @@
         <button onclick="addPlayer('words')">+</button>
       </div>
       <div class="section-label" style="margin-top:1.5rem;">Modalità</div>
-      <div class="pills" id="words-cats"></div>
+      <div class="category-picker">
+        <div class="category-current" id="words-current-cat"></div>
+        <button class="category-redraw-btn" onclick="redrawCategory('words')">Redraw</button>
+      </div>
+      <div class="add-row" style="margin-top:10px;">
+        <input type="text" id="words-custom-cat" placeholder="Oppure scrivi una modalità..." />
+        <button onclick="setCustomCategory('words')">Usa</button>
+      </div>
       <button class="btn-start" onclick="startWords()">Inizia</button>
     </div>
     <div id="words-game" class="game-panel" style="display:none;">
@@ -107,12 +121,13 @@
       </div>
 
       <div class="section-label" style="margin-top:1.5rem;">Categoria</div>
-      <div class="pills" id="alphabet-cats"></div>
-
-      <!-- Aggiungi categoria al momento -->
+      <div class="category-picker">
+        <div class="category-current" id="alphabet-current-cat"></div>
+        <button class="category-redraw-btn" onclick="redrawAlphabetCategory()">Redraw</button>
+      </div>
       <div class="add-row" style="margin-top:10px;">
         <input type="text" id="alphabet-custom-cat" placeholder="Oppure scrivi una categoria..." />
-        <button onclick="addCustomCategory()">+</button>
+        <button onclick="setCustomAlphabetCategory()">Usa</button>
       </div>
 
       <div class="section-label" style="margin-top:1.5rem;">Secondi per turno</div>

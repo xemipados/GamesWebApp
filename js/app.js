@@ -77,26 +77,49 @@ document.addEventListener('DOMContentLoaded', () => {
   ['quiz', 'words'].forEach(game => {
     const input = document.getElementById(game + '-player-input');
     if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(game); });
+
+    const customCatInput = document.getElementById(game + '-custom-cat');
+    if (customCatInput) {
+      customCatInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') setCustomCategory(game);
+      });
+    }
   });
 });
 
-/* ─── Pills ─── */
-function buildPills(containerId, categories, game) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  const keys = Object.keys(categories);
-  keys.forEach((cat, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'pill' + (i === 0 ? ' active' : '');
-    btn.textContent = cat;
-    btn.onclick = () => {
-      container.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      state[game].cat = cat;
-    };
-    container.appendChild(btn);
-  });
-  state[game].cat = keys[0];
+/* ─── Categoria random/redraw/custom ─── */
+function getCategoriesByGame(game) {
+  return game === 'quiz' ? Object.keys(QUIZ_CATEGORIES) : Object.keys(WORDS_CATEGORIES);
+}
+
+function redrawCategory(game) {
+  const categories = getCategoriesByGame(game);
+  if (!categories.length) {
+    state[game].cat = null;
+    return;
+  }
+  const randomCat = categories[Math.floor(Math.random() * categories.length)];
+  state[game].cat = randomCat;
+  const current = document.getElementById(game + '-current-cat');
+  if (current) current.textContent = randomCat;
+}
+
+function setCustomCategory(game) {
+  const input = document.getElementById(game + '-custom-cat');
+  const val = input.value.trim();
+  if (!val) return;
+  state[game].cat = val;
+  const current = document.getElementById(game + '-current-cat');
+  if (current) current.textContent = val;
+  input.value = '';
+}
+
+function getCategoryItems(game) {
+  const source = game === 'quiz' ? QUIZ_CATEGORIES : WORDS_CATEGORIES;
+  const selected = state[game].cat;
+  if (selected && source[selected]) return source[selected];
+
+  return Object.values(source).flat();
 }
 
 /* ─────────────────────────────────────────────
@@ -108,19 +131,20 @@ function openGame(id) {
   if (id === 'quiz') {
     document.getElementById('quiz-setup').style.display = 'block';
     document.getElementById('quiz-game').style.display  = 'none';
-    buildPills('quiz-cats', QUIZ_CATEGORIES, 'quiz');
+    redrawCategory('quiz');
   }
   if (id === 'words') {
     document.getElementById('words-setup').style.display = 'block';
     document.getElementById('words-game').style.display  = 'none';
-    buildPills('words-cats', WORDS_CATEGORIES, 'words');
+    redrawCategory('words');
   }
 }
 
 function startQuiz() {
   if (state.quiz.players.length < 1) { alert('Aggiungi almeno un giocatore!'); return; }
-  const cat = state.quiz.cat;
-  state.quiz.questions = shuffle(QUIZ_CATEGORIES[cat]);
+  if (!state.quiz.cat) redrawCategory('quiz');
+  const cat = state.quiz.cat || 'Misto';
+  state.quiz.questions = shuffle(getCategoryItems('quiz'));
   state.quiz.qIndex = 0;
   Object.keys(state.quiz.scores).forEach(k => state.quiz.scores[k] = 0);
 
@@ -159,8 +183,9 @@ function nextQuestion() {
    ───────────────────────────────────────────── */
 function startWords() {
   if (state.words.players.length < 1) { alert('Aggiungi almeno un giocatore!'); return; }
-  const cat = state.words.cat;
-  state.words.prompts      = shuffle(WORDS_CATEGORIES[cat]);
+  if (!state.words.cat) redrawCategory('words');
+  const cat = state.words.cat || 'Misto';
+  state.words.prompts      = shuffle(getCategoryItems('words'));
   state.words.turn         = 0;
   state.words.promptIndex  = 0;
   Object.keys(state.words.scores).forEach(k => state.words.scores[k] = 0);
