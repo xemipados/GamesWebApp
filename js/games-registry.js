@@ -118,9 +118,9 @@ const GAMES_REGISTRY = [
     title: "Parole",
     description: "Sfide creative di parole",
     screen: "words"
-  }
+  },
   {
-    id: "alphabet",           // ← AGGIUNGI QUESTO BLOCCO
+    id: "alphabet",           
     icon: "🔤",
     title: "Alfabeto",
     description: "Una parola per lettera, prima che scada il timer",
