@@ -1025,3 +1025,226 @@ header p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
 }
 .ranking-row:last-child { border-bottom: none; }
 .ranking-pos { font-weight: 600; min-width: 28px; color: var(--muted); }
+
+/* --- Wavelength --- */
+.wavelength-head {
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.wavelength-title {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #1f5f8f;
+}
+
+.wavelength-subtitle {
+  margin-top: 0.35rem;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.wavelength-scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0.8rem 0 0.95rem;
+}
+
+.wavelength-team-chip {
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #fffdf7 0%, #ffeec8 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.wavelength-team-chip.active {
+  border-color: #73b2e6;
+  background: linear-gradient(180deg, #e9f6ff 0%, #cfeaff 100%);
+}
+
+.wavelength-spectrum-ends {
+  display: none;
+}
+
+.wavelength-pole {
+  max-width: 280px;
+  text-align: center;
+  line-height: 1.2;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 20px;
+  font-weight: 800;
+  color: #2d4f70;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.wavelength-pole-top {
+  margin-bottom: 8px;
+}
+
+.wavelength-pole-bottom {
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.wavelength-phase-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, #fffefb 0%, #fff0cb 100%);
+  padding: 12px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+.wavelength-secret-value {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #8b2f6e;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.wavelength-track {
+  position: relative;
+  width: 132px;
+  height: 360px;
+  margin: 8px auto 12px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid #b8c8da;
+  background: linear-gradient(180deg, #ffd2d2 0%, #f7f1eb 50%, #cfe7ff 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 8px 14px rgba(53, 94, 131, 0.12);
+}
+
+.wavelength-stack {
+  position: absolute;
+  inset: 8px;
+  display: grid;
+  grid-template-rows: repeat(21, 1fr);
+  gap: 4px;
+}
+
+.wavelength-layer {
+  display: block;
+  border-radius: 7px;
+  border: 1px solid rgba(73, 94, 117, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(246, 233, 218, 0.9) 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  appearance: none;
+  cursor: default;
+}
+
+.wavelength-stack.interactive .wavelength-layer {
+  cursor: pointer;
+}
+
+.wavelength-stack.interactive .wavelength-layer:hover {
+  filter: brightness(0.96);
+}
+
+.wavelength-layer:nth-child(-n+7) {
+  background: linear-gradient(180deg, #ffc2c2 0%, #ffdad3 100%);
+}
+
+.wavelength-layer:nth-child(n+15) {
+  background: linear-gradient(180deg, #dcf0ff 0%, #c8e4ff 100%);
+}
+
+.wavelength-layer.selected {
+  border-color: #1f5f8f;
+  box-shadow: inset 0 0 0 2px rgba(31, 95, 143, 0.28), 0 0 0 2px rgba(31, 95, 143, 0.18);
+}
+
+.wavelength-layer.target-range {
+  border-color: #8b2f6e;
+  box-shadow: inset 0 0 0 2px rgba(139, 47, 110, 0.14), 0 0 0 1px rgba(139, 47, 110, 0.1);
+}
+
+.wavelength-layer.target-center {
+  border-color: #8b2f6e;
+  box-shadow: inset 0 0 0 2px rgba(139, 47, 110, 0.3), 0 0 0 3px rgba(139, 47, 110, 0.18);
+}
+
+.wavelength-layer.revealed-guess {
+  border-color: #1f5f8f;
+}
+
+.wavelength-track-clickable {
+  cursor: pointer;
+}
+
+.wavelength-marker {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.wavelength-marker.secret {
+  background: #8b2f6e;
+}
+
+.wavelength-marker.guess {
+  background: #1f5f8f;
+}
+
+.wavelength-guess-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.wavelength-guess-controls .btn-next {
+  padding: 10px;
+}
+
+.wavelength-guess-value {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f5f8f;
+  margin: 8px 0 12px;
+}
+
+.wavelength-result-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a3322;
+  margin-bottom: 8px;
+}
+
+.wavelength-final-scores {
+  display: grid;
+  gap: 8px;
+  margin: 0.4rem 0 1rem;
+}
+
+.wavelength-score-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #fffef8 0%, #fff0ca 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  font-size: 14px;
+  font-weight: 700;
+}

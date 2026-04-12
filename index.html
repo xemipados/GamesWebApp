@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Party Games</title>
+  <title>Giochini</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -11,7 +11,7 @@
   <!-- HOME -->
   <div id="screen-home" class="screen active">
     <header>
-      <h1>Party Games</h1>
+      <h1>Giochini</h1>
       <p>Scegli un gioco</p>
     </header>
     <div class="game-grid" id="game-grid">
@@ -19,14 +19,14 @@
     </div>
   </div>
 
-  <!-- PAROLE -->
+  <!-- TABOO -->
   <div id="screen-words" class="screen">
     <div class="topbar">
       <button class="back-btn" onclick="goHome()">← Indietro</button>
     </div>
     <div id="words-setup" class="setup-panel">
-      <h2>Parole</h2>
-      <p class="subtitle">Sfide di creatività e parole</p>
+      <h2>Taboo</h2>
+      <p class="subtitle">Fai indovinare la parola senza usare i termini proibiti</p>
       <div class="section-label">Giocatori</div>
       <div id="words-players-tags"></div>
       <div class="add-row">
@@ -216,9 +216,97 @@
 
   </div>
 
+  <!-- WAVELENGTH -->
+  <div id="screen-wavelength" class="screen">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← Indietro</button>
+    </div>
+
+    <div id="wavelength-setup" class="setup-panel">
+      <h2>Wavelength</h2>
+      <p class="subtitle">Un giocatore vede una posizione segreta sulla scala e dà un indizio al team.</p>
+
+      <div class="section-label">Giocatori</div>
+      <div id="wavelength-players-tags"></div>
+      <div class="add-row">
+        <input type="text" id="wavelength-player-input" placeholder="Nome giocatore..." />
+        <button onclick="addPlayer('wavelength')">+</button>
+      </div>
+
+      <div class="section-label" style="margin-top:1.5rem;">Round</div>
+      <div class="timer-picker">
+        <button class="timer-btn" id="wavelength-rounds-6" onclick="setWavelengthRounds(6)">6</button>
+        <button class="timer-btn active" id="wavelength-rounds-8" onclick="setWavelengthRounds(8)">8</button>
+        <button class="timer-btn" id="wavelength-rounds-10" onclick="setWavelengthRounds(10)">10</button>
+      </div>
+
+      <button class="btn-start" onclick="startWavelength()">Inizia</button>
+    </div>
+
+    <div id="wavelength-game" class="game-panel" style="display:none;">
+      <div class="wavelength-head">
+        <div class="wavelength-title" id="wavelength-current-team">Squadra 1</div>
+        <div class="wavelength-subtitle" id="wavelength-turn-info"></div>
+      </div>
+
+      <div id="wavelength-scoreboard" class="wavelength-scoreboard"></div>
+
+      <div id="wavelength-brief" class="wavelength-phase-card">
+        <div class="section-label">Solo il suggeritore guarda</div>
+        <p id="wavelength-secret-value" class="wavelength-secret-value"></p>
+        <div class="wavelength-pole wavelength-pole-top js-wavelength-left"></div>
+        <div class="wavelength-track wavelength-track-vertical">
+          <div class="wavelength-stack" aria-hidden="true"></div>
+          <div id="wavelength-secret-marker" class="wavelength-marker secret"></div>
+        </div>
+        <div class="wavelength-pole wavelength-pole-bottom js-wavelength-right"></div>
+        <button class="btn-next" onclick="goToWavelengthGuess()">Indizio dato, passa al team</button>
+      </div>
+
+      <div id="wavelength-guess" class="wavelength-phase-card" style="display:none;">
+        <div class="section-label">Team: scegli la posizione sulla colonna</div>
+        <div class="wavelength-pole wavelength-pole-top js-wavelength-left"></div>
+        <div id="wavelength-guess-track" class="wavelength-track wavelength-track-vertical wavelength-track-clickable">
+          <div class="wavelength-stack interactive" aria-hidden="true"></div>
+          <div id="wavelength-guess-marker" class="wavelength-marker guess"></div>
+        </div>
+        <div class="wavelength-pole wavelength-pole-bottom js-wavelength-right"></div>
+        <div class="wavelength-guess-controls">
+          <button class="btn-next" type="button" onclick="nudgeWavelengthGuess(5)">+5</button>
+          <button class="btn-next" type="button" onclick="nudgeWavelengthGuess(-5)">-5</button>
+        </div>
+        <div id="wavelength-guess-value" class="wavelength-guess-value">50%</div>
+        <button class="btn-next" onclick="revealWavelengthRound()">Rivela</button>
+      </div>
+
+      <div id="wavelength-result" class="wavelength-phase-card" style="display:none;">
+        <div class="section-label">Risultato round</div>
+        <p id="wavelength-result-text" class="wavelength-result-text"></p>
+        <div class="wavelength-pole wavelength-pole-top js-wavelength-left"></div>
+        <div class="wavelength-track wavelength-track-vertical reveal">
+          <div class="wavelength-stack" aria-hidden="true"></div>
+          <div id="wavelength-reveal-secret" class="wavelength-marker secret"></div>
+          <div id="wavelength-reveal-guess" class="wavelength-marker guess"></div>
+        </div>
+        <div class="wavelength-pole wavelength-pole-bottom js-wavelength-right"></div>
+        <button class="btn-start" style="margin-top:1rem;" onclick="nextWavelengthRound()">Prossimo round</button>
+      </div>
+
+      <div id="wavelength-end" class="wavelength-phase-card" style="display:none;">
+        <div style="text-align:center; padding: 0.8rem 0 0.4rem;">
+          <div style="font-size:42px; margin-bottom:8px;">🏁</div>
+          <h2 id="wavelength-winner" style="font-size:22px; font-weight:600;"></h2>
+        </div>
+        <div id="wavelength-final-scores" class="wavelength-final-scores"></div>
+        <button class="btn-start" onclick="openGame('wavelength')">Gioca ancora</button>
+      </div>
+    </div>
+  </div>
+
 
   <script src="js/games-registry.js"></script>
   <script src="js/app.js"></script>
   <script src="js/alphabet.js"></script>
+  <script src="js/wavelength.js"></script>
 </body>
 </html>

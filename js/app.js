@@ -61,12 +61,6 @@ function buildHome() {
     grid.appendChild(card);
   });
 
-  // Card "aggiungi"
-  const add = document.createElement('div');
-  add.className = 'game-card add-card';
-  add.innerHTML = `<div class="icon">＋</div><h3>Aggiungi</h3><p>Nuovo gioco</p>`;
-  add.onclick = () => alert('Apri games-registry.js in VS Code per aggiungere nuovi giochi!');
-  grid.appendChild(add);
 }
 
 /* ─── Giocatori ─── */
