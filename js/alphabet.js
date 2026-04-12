@@ -11,7 +11,7 @@ const ALPHABET_CATEGORIES = [
   "Oggetti che trovi in frigo",
   "Cose che usi in estate",
   "Cantanti",
-  "Attori / Attrici",
+  "Attori",
   "Animali",
   "Paesi del mondo",
   "Cibi e bevande",
@@ -22,7 +22,20 @@ const ALPHABET_CATEGORIES = [
   "Marchi di automobili",
   "Nomi di persona",
   "Oggetti in cucina",
-  "Cose che fanno rumore"
+  "Cose che fanno rumore",
+  "Cose che volano",
+  "Cose che trovi in una scuola",
+  "Cose che trovi in una spiaggia",
+  "Capitali europee",
+  "Capitali del mondo",
+  "Marche di vestiti",
+  "Marche di make-up",
+  "Strumenti musicali",
+  "Film Disney",
+  "Serie TV famose",
+  "case automobilistiche",
+  "Genere musicale",
+  "Fast food"
 ];
 
 /* ─── Costanti ─── */
@@ -41,6 +54,7 @@ const alphabetState = {
   timerSeconds:   15,
   timerLeft:      15,
   timerInterval:  null,
+  timerDeadline:  0,
   cat:            null,
 };
 
@@ -154,17 +168,24 @@ function startTurn() {
 
 function startTimer() {
   clearInterval(alphabetState.timerInterval);
+  alphabetState.timerDeadline = Date.now() + (alphabetState.timerSeconds * 1000);
   alphabetState.timerLeft = alphabetState.timerSeconds;
   updateTimerUI();
 
   alphabetState.timerInterval = setInterval(() => {
-    alphabetState.timerLeft--;
-    updateTimerUI();
-    if (alphabetState.timerLeft <= 0) {
+    const msLeft = alphabetState.timerDeadline - Date.now();
+    const secondsLeft = Math.max(0, Math.ceil(msLeft / 1000));
+
+    if (secondsLeft !== alphabetState.timerLeft) {
+      alphabetState.timerLeft = secondsLeft;
+      updateTimerUI();
+    }
+
+    if (msLeft <= 0) {
       clearInterval(alphabetState.timerInterval);
       playerFailed('timeout');
     }
-  }, 1000);
+  }, 100);
 }
 
 function updateTimerUI() {
@@ -357,6 +378,22 @@ function renderEliminatedPlayers() {
 // ma lo stato è separato, quindi usiamo lo stesso pattern ma con alphabetState
 const _origAddPlayer = typeof window.addPlayer === 'function' ? window.addPlayer : null;
 const _origRemovePlayer = typeof window.removePlayer === 'function' ? window.removePlayer : null;
+const _origRenderPlayerTags = typeof window.renderPlayerTags === 'function' ? window.renderPlayerTags : null;
+
+window.renderPlayerTags = function renderPlayerTagsAlphabet(game) {
+  if (game === 'alphabet') {
+    const container = document.getElementById('alphabet-players-tags');
+    if (!container) return;
+
+    container.innerHTML = alphabetState.players.map(p =>
+      `<span class="player-tag">${p}
+        <button onclick="removePlayer('alphabet','${p}')">×</button>
+      </span>`
+    ).join('');
+  } else if (_origRenderPlayerTags) {
+    _origRenderPlayerTags(game);
+  }
+};
 
 window.addPlayer = function addPlayerAlphabet(game) {
   if (game === 'alphabet') {

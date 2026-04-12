@@ -19,47 +19,6 @@
     </div>
   </div>
 
-  <!-- QUIZ -->
-  <div id="screen-quiz" class="screen">
-    <div class="topbar">
-      <button class="back-btn" onclick="goHome()">← Indietro</button>
-    </div>
-    <div id="quiz-setup" class="setup-panel">
-      <h2>Quiz</h2>
-      <p class="subtitle">Rispondi correttamente e segna un punto</p>
-      <div class="section-label">Giocatori</div>
-      <div id="quiz-players-tags"></div>
-      <div class="add-row">
-        <input type="text" id="quiz-player-input" placeholder="Nome giocatore..." />
-        <button onclick="addPlayer('quiz')">+</button>
-      </div>
-      <div class="section-label" style="margin-top:1.5rem;">Categoria</div>
-      <div class="category-picker">
-        <div class="category-current" id="quiz-current-cat"></div>
-        <button class="category-redraw-btn" onclick="redrawCategory('quiz')">Redraw</button>
-      </div>
-      <div class="add-row" style="margin-top:10px;">
-        <input type="text" id="quiz-custom-cat" placeholder="Oppure scrivi una categoria..." />
-        <button onclick="setCustomCategory('quiz')">Usa</button>
-      </div>
-      <button class="btn-start" onclick="startQuiz()">Inizia il quiz</button>
-    </div>
-    <div id="quiz-game" class="game-panel" style="display:none;">
-      <div class="info-row">
-        <span id="quiz-progress" class="muted-label">Domanda 1</span>
-        <span id="quiz-cat-badge" class="badge badge-purple"></span>
-      </div>
-      <div class="card-question">
-        <p id="quiz-question"></p>
-      </div>
-      <div class="scores-block">
-        <div class="section-label">Punteggi</div>
-        <div id="quiz-scores"></div>
-      </div>
-      <button class="btn-next" onclick="nextQuestion()">Prossima domanda →</button>
-    </div>
-  </div>
-
   <!-- PAROLE -->
   <div id="screen-words" class="screen">
     <div class="topbar">
@@ -74,30 +33,130 @@
         <input type="text" id="words-player-input" placeholder="Nome giocatore..." />
         <button onclick="addPlayer('words')">+</button>
       </div>
-      <div class="section-label" style="margin-top:1.5rem;">Modalità</div>
-      <div class="category-picker">
-        <div class="category-current" id="words-current-cat"></div>
-        <button class="category-redraw-btn" onclick="redrawCategory('words')">Redraw</button>
+      <div class="section-label" style="margin-top:1.5rem;">Squadre</div>
+      <div class="team-mode-switch">
+        <button class="team-mode-btn active" id="words-mode-manual-btn" onclick="setWordsTeamMode('manual')">Manuale</button>
+        <button class="team-mode-btn" id="words-mode-random-btn" onclick="setWordsTeamMode('random')">Random</button>
       </div>
-      <div class="add-row" style="margin-top:10px;">
-        <input type="text" id="words-custom-cat" placeholder="Oppure scrivi una modalità..." />
-        <button onclick="setCustomCategory('words')">Usa</button>
+      <div class="team-count-row">
+        <span class="team-count-label">Numero squadre</span>
+        <input type="number" id="words-team-count" min="2" max="8" value="2" onchange="setWordsTeamCount(this.value)" />
+      </div>
+      <div id="words-team-builder" class="words-team-builder"></div>
+      <div class="team-actions">
+        <button class="team-random-btn" onclick="randomizeWordsTeams()">Randomizza squadre</button>
+      </div>
+
+      <div class="section-label" style="margin-top:1.5rem;">Dado eventi</div>
+      <div class="team-mode-switch">
+        <button class="team-mode-btn active" id="words-dice-off-btn" onclick="setWordsDiceEnabled(false)">No dado</button>
+        <button class="team-mode-btn" id="words-dice-on-btn" onclick="setWordsDiceEnabled(true)">Usa dado</button>
       </div>
       <button class="btn-start" onclick="startWords()">Inizia</button>
     </div>
     <div id="words-game" class="game-panel" style="display:none;">
+      <div class="words-head">
+        <div id="words-team-badge" class="words-team-title"></div>
+        <div id="words-turn-label" class="words-turn-sub">Turno di <strong id="words-player-name"></strong></div>
+        <div class="words-turn-meta">
+          <span class="words-pass-badge">Passi: <strong id="words-pass-count">3/3</strong></span>
+        </div>
+      </div>
+      <div id="words-live-area">
+      <div class="words-timer-wrap">
+        <svg class="words-timer-ring" viewBox="0 0 120 120">
+          <circle class="words-ring-bg" cx="60" cy="60" r="48"/>
+          <circle class="words-ring-fg" id="words-ring-fg" cx="60" cy="60" r="48"/>
+        </svg>
+        <span id="words-turn-timer-big" class="words-timer-number">01:00</span>
+      </div>
+      <div id="words-preturn" class="words-preturn" style="display:none;">
+        <div class="section-label">Evento turno</div>
+        <p id="words-dice-result" class="words-dice-result">Lancia il dado per scoprire la regola.</p>
+        <div id="words-single-picker" style="display:none; margin-top:8px;">
+          <div class="section-label">Scegli il membro che indovina</div>
+          <select id="words-single-member-select" class="team-select"></select>
+        </div>
+        <div class="words-preturn-actions">
+          <button class="btn-next" id="words-roll-btn" onclick="rollWordsDice()">Lancia dado</button>
+          <button class="btn-start" id="words-start-turn-btn" onclick="startConfiguredWordsTurn()" style="margin-top:0;">Inizia turno</button>
+        </div>
+      </div>
+      <div class="card-question taboo-card">
+        <div class="taboo-instruction">Parola da far indovinare</div>
+        <div id="words-taboo-word" class="taboo-word"></div>
+        <div class="taboo-divider"></div>
+        <div class="taboo-forbidden-label">Parole proibite</div>
+        <div id="words-forbidden-list" class="taboo-forbidden-list"></div>
+      </div>
+      <div id="words-all-teams-controls" class="words-all-teams-controls" style="display:none;"></div>
+      <div class="words-actions">
+        <button class="words-action-btn words-buzz-btn" onclick="buzzWord()">Buzz</button>
+        <button class="words-action-btn words-guess-btn" onclick="guessedWord()">Indovinata</button>
+        <button class="words-action-btn words-pass-btn" id="btn-pass" onclick="passWord()">Passo</button>
+      </div>
+      </div>
+
+      <div id="words-turn-recap" class="words-recap" style="display:none;">
+        <div class="section-label">Recap turno</div>
+        <h3 id="words-recap-title"></h3>
+        <div id="words-recap-list" class="words-recap-list"></div>
+        <div class="words-recap-score-edit">
+          <div class="section-label" style="margin-top:0.9rem;">Punti squadra turno</div>
+          <div class="words-recap-score-row">
+            <span id="words-recap-team-name"></span>
+            <div class="score-controls">
+              <button class="score-btn" onclick="adjustWordsRecapScore(-1)">−</button>
+              <span class="score-val" id="words-recap-team-score">0</span>
+              <button class="score-btn" onclick="adjustWordsRecapScore(1)">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="section-label" style="margin-top:0.9rem;">Punteggi squadre</div>
+        <div id="words-recap-scores" class="words-recap-scores"></div>
+        <button class="btn-start" onclick="continueWordsTurn()">Continua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAROLE (separato da Taboo) -->
+  <div id="screen-parole" class="screen">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← Indietro</button>
+    </div>
+    <div id="parole-setup" class="setup-panel">
+      <h2>Parole</h2>
+      <p class="subtitle">Descrivi e racconta a turni</p>
+      <div class="section-label">Giocatori</div>
+      <div id="parole-players-tags"></div>
+      <div class="add-row">
+        <input type="text" id="parole-player-input" placeholder="Nome giocatore..." />
+        <button onclick="addPlayer('parole')">+</button>
+      </div>
+      <div class="section-label" style="margin-top:1.5rem;">Modalità</div>
+      <div class="category-picker">
+        <div class="category-current" id="parole-current-cat"></div>
+        <button class="category-redraw-btn" onclick="redrawCategory('parole')">Redraw</button>
+      </div>
+      <div class="add-row" style="margin-top:10px;">
+        <input type="text" id="parole-custom-cat" placeholder="Oppure scrivi una modalità..." />
+        <button onclick="setCustomCategory('parole')">Usa</button>
+      </div>
+      <button class="btn-start" onclick="startParole()">Inizia</button>
+    </div>
+    <div id="parole-game" class="game-panel" style="display:none;">
       <div class="info-row">
-        <span class="muted-label">Turno di <strong id="words-player-name"></strong></span>
-        <span id="words-mode-badge" class="badge badge-teal"></span>
+        <span class="muted-label">Turno di <strong id="parole-player-name"></strong></span>
+        <span id="parole-mode-badge" class="badge badge-purple"></span>
       </div>
       <div class="card-question">
-        <p id="words-prompt"></p>
+        <p id="parole-prompt"></p>
       </div>
       <div class="scores-block">
         <div class="section-label">Punteggi</div>
-        <div id="words-scores"></div>
+        <div id="parole-scores"></div>
       </div>
-      <button class="btn-next" onclick="nextWords()">Prossimo turno →</button>
+      <button class="btn-next" onclick="nextParole()">Prossimo turno →</button>
     </div>
   </div>
 
@@ -144,9 +203,9 @@
     <!-- GIOCO -->
     <div id="alphabet-game" class="game-panel" style="display:none;">
 
-      <div class="info-row">
-        <span id="alphabet-turn-label" class="muted-label">Turno di <strong id="alphabet-player-name"></strong></span>
-        <span id="alphabet-cat-badge" class="badge badge-amber"></span>
+      <div class="alphabet-head">
+        <div id="alphabet-cat-badge" class="alphabet-cat-title"></div>
+        <div id="alphabet-turn-label" class="alphabet-turn-sub">Turno di <strong id="alphabet-player-name"></strong></div>
       </div>
 
       <!-- Timer ring -->

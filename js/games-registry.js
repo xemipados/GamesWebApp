@@ -106,18 +106,18 @@ const WORDS_CATEGORIES = {
    ───────────────────────────────────────────── */
 const GAMES_REGISTRY = [
   {
-    id: "quiz",
-    icon: "🎯",
-    title: "Quiz",
-    description: "Domande e risposte a turni",
-    screen: "quiz"
+    id: "words",
+    icon: "🚫",
+    title: "Taboo",
+    description: "Parola da indovinare con parole proibite",
+    screen: "words"
   },
   {
-    id: "words",
+    id: "parole",
     icon: "💬",
     title: "Parole",
-    description: "Sfide creative di parole",
-    screen: "words"
+    description: "Descrivi e racconta a turni",
+    screen: "parole"
   },
   {
     id: "alphabet",           
