@@ -87,7 +87,103 @@
     </div>
   </div>
 
+
+  <!-- ALFABETO -->
+  <div id="screen-alphabet" class="screen">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← Indietro</button>
+    </div>
+
+    <!-- SETUP -->
+    <div id="alphabet-setup" class="setup-panel">
+      <h2>Alfabeto</h2>
+      <p class="subtitle">Dì una parola per lettera prima che scada il timer</p>
+
+      <div class="section-label">Giocatori</div>
+      <div id="alphabet-players-tags"></div>
+      <div class="add-row">
+        <input type="text" id="alphabet-player-input" placeholder="Nome giocatore..." />
+        <button onclick="addPlayer('alphabet')">+</button>
+      </div>
+
+      <div class="section-label" style="margin-top:1.5rem;">Categoria</div>
+      <div class="pills" id="alphabet-cats"></div>
+
+      <!-- Aggiungi categoria al momento -->
+      <div class="add-row" style="margin-top:10px;">
+        <input type="text" id="alphabet-custom-cat" placeholder="Oppure scrivi una categoria..." />
+        <button onclick="addCustomCategory()">+</button>
+      </div>
+
+      <div class="section-label" style="margin-top:1.5rem;">Secondi per turno</div>
+      <div class="timer-picker">
+        <button class="timer-btn" onclick="setTimer(10)">10s</button>
+        <button class="timer-btn active" onclick="setTimer(15)">15s</button>
+        <button class="timer-btn" onclick="setTimer(20)">20s</button>
+        <button class="timer-btn" onclick="setTimer(30)">30s</button>
+      </div>
+
+      <button class="btn-start" onclick="startAlphabet()">Inizia</button>
+    </div>
+
+    <!-- GIOCO -->
+    <div id="alphabet-game" class="game-panel" style="display:none;">
+
+      <div class="info-row">
+        <span id="alphabet-turn-label" class="muted-label">Turno di <strong id="alphabet-player-name"></strong></span>
+        <span id="alphabet-cat-badge" class="badge badge-amber"></span>
+      </div>
+
+      <!-- Timer ring -->
+      <div class="timer-wrap">
+        <svg class="timer-ring" viewBox="0 0 80 80">
+          <circle class="ring-bg" cx="40" cy="40" r="34"/>
+          <circle class="ring-fg" id="ring-fg" cx="40" cy="40" r="34"/>
+        </svg>
+        <span id="timer-display" class="timer-number">15</span>
+      </div>
+
+      <!-- Griglia lettere -->
+      <div class="letters-grid" id="letters-grid"></div>
+
+      <!-- Giocatori attivi -->
+      <div class="section-label" style="margin-top:1.5rem;">In gioco</div>
+      <div id="alphabet-active-players"></div>
+
+      <!-- Eliminati -->
+      <div id="eliminated-section" style="display:none;">
+        <div class="section-label" style="margin-top:1rem; color:#c0392b;">Eliminati</div>
+        <div id="alphabet-eliminated"></div>
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:1.5rem;">
+        <button class="btn-next" id="btn-said" onclick="playerSaid()" style="flex:2;">
+          ✓ Detto!
+        </button>
+        <button class="btn-next" id="btn-skip" onclick="playerFailed()" style="flex:1; color:#c0392b;">
+          ✗ Fail
+        </button>
+      </div>
+
+    </div>
+
+    <!-- FINE PARTITA -->
+    <div id="alphabet-end" class="game-panel" style="display:none;">
+      <div style="text-align:center; padding: 2rem 0 1rem;">
+        <div style="font-size:48px; margin-bottom:12px;">🏆</div>
+        <h2 id="alphabet-winner" style="font-size:22px; font-weight:600;"></h2>
+        <p id="alphabet-end-reason" class="subtitle" style="margin-top:6px;"></p>
+      </div>
+      <div class="section-label">Classifica finale</div>
+      <div id="alphabet-final-ranking"></div>
+      <button class="btn-start" onclick="openGame('alphabet')" style="margin-top:2rem;">Gioca ancora</button>
+    </div>
+
+  </div>
+
+
   <script src="js/games-registry.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/alphabet.js"></script>
 </body>
 </html>

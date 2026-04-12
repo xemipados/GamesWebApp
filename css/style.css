@@ -238,3 +238,106 @@ header p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
   transition: background 0.1s;
 }
 .btn-next:active { background: var(--bg); }
+
+/* --- Timer picker (setup) --- */
+.timer-picker { display: flex; gap: 8px; }
+.timer-btn {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: none;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.1s;
+}
+.timer-btn.active { background: var(--purple-bg); color: var(--purple-tx); border-color: #AFA9EC; }
+
+/* --- Timer ring --- */
+.timer-wrap {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  margin: 1.25rem auto;
+}
+.timer-ring { width: 90px; height: 90px; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--border); stroke-width: 5; }
+.ring-fg {
+  fill: none;
+  stroke: #3C3489;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 213.6;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s;
+}
+.ring-fg.danger { stroke: #c0392b; }
+.timer-number {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* --- Griglia lettere --- */
+.letters-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+.letter-cell {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.letter-cell:hover { border-color: #AFA9EC; background: var(--purple-bg); color: var(--purple-tx); }
+.letter-cell.selected { background: var(--purple-bg); color: var(--purple-tx); border-color: #AFA9EC; box-shadow: 0 0 0 2px #AFA9EC; }
+.letter-cell.used { background: var(--bg); color: var(--border); border-color: var(--border); pointer-events: none; text-decoration: line-through; }
+
+/* --- Badge amber --- */
+.badge-amber { background: #FAEEDA; color: #633806; }
+
+/* --- Giocatori in gioco / eliminati --- */
+.alive-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.alive-row:last-child { border-bottom: none; }
+.alive-row.current { font-weight: 600; color: var(--purple-tx); }
+.elim-row {
+  display: inline-block;
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: var(--radius-sm);
+  padding: 4px 10px;
+  font-size: 13px;
+  margin: 3px;
+}
+.ranking-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.ranking-row:last-child { border-bottom: none; }
+.ranking-pos { font-weight: 600; min-width: 28px; color: var(--muted); }
