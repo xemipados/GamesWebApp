@@ -6,7 +6,6 @@
 
 /* ─── Stato globale ─── */
 const state = {
-  parole: { players: [], scores: {}, cat: null, prompts: [], turn: 0, promptIndex: 0 },
   words: {
     players: [],
     scores: {},
@@ -115,7 +114,7 @@ function renderPlayerTags(game) {
 
 // Enter su input aggiunge giocatore
 document.addEventListener('DOMContentLoaded', () => {
-  ['parole', 'words'].forEach(game => {
+  ['words'].forEach(game => {
     const input = document.getElementById(game + '-player-input');
     if (input) input.addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(game); });
 
@@ -130,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ─── Categoria random/redraw/custom ─── */
 function getCategoriesByGame(game) {
-  if (game === 'parole') return Object.keys(WORDS_CATEGORIES).filter(category => category !== 'Taboo');
   return Object.keys(WORDS_CATEGORIES);
 }
 
@@ -160,12 +158,6 @@ function getCategoryItems(game) {
   const source = WORDS_CATEGORIES;
   const selected = state[game].cat;
   if (selected && source[selected]) return source[selected];
-
-  if (game === 'parole') {
-    return Object.entries(source)
-      .filter(([category]) => category !== 'Taboo')
-      .flatMap(([, prompts]) => prompts);
-  }
 
   return Object.values(source).flat();
 }
@@ -572,15 +564,10 @@ function openGame(id) {
     updateWordsDiceButtons();
     renderPlayerTags('words');
   }
-  if (id === 'parole') {
-    document.getElementById('parole-setup').style.display = 'block';
-    document.getElementById('parole-game').style.display  = 'none';
-    redrawCategory('parole');
-  }
 }
 
 /* ─────────────────────────────────────────────
-   PAROLE
+   TABOO
    ───────────────────────────────────────────── */
 function startWords() {
   if (state.words.players.length < 2) { alert('Aggiungi almeno 2 giocatori!'); return; }
@@ -630,50 +617,6 @@ function startWords() {
   prepareWordsTurn();
 }
 
-function startParole() {
-  if (state.parole.players.length < 1) { alert('Aggiungi almeno un giocatore!'); return; }
-  if (!state.parole.cat) redrawCategory('parole');
-
-  const cat = state.parole.cat || 'Misto';
-  state.parole.prompts = shuffle(getCategoryItems('parole'));
-  state.parole.turn = 0;
-  state.parole.promptIndex = 0;
-  Object.keys(state.parole.scores).forEach(player => { state.parole.scores[player] = 0; });
-
-  document.getElementById('parole-setup').style.display = 'none';
-  document.getElementById('parole-game').style.display  = 'block';
-  document.getElementById('parole-mode-badge').textContent = cat;
-
-  renderParole();
-}
-
-function renderParole() {
-  const prompts = state.parole.prompts;
-  const players = state.parole.players;
-  const currentPlayer = players[state.parole.turn % players.length];
-  const btn = document.querySelector('#parole-game .btn-next');
-
-  document.getElementById('parole-player-name').textContent = currentPlayer;
-
-  if (state.parole.promptIndex >= prompts.length) {
-    document.getElementById('parole-prompt').textContent = '🏁 Prompt finiti! Guarda i punteggi.';
-    btn.textContent = 'Rigioca';
-    btn.onclick = () => openGame('parole');
-  } else {
-    document.getElementById('parole-prompt').textContent = prompts[state.parole.promptIndex];
-    btn.textContent = 'Prossimo turno →';
-    btn.onclick = nextParole;
-  }
-
-  renderScores('parole');
-}
-
-function nextParole() {
-  state.parole.turn += 1;
-  state.parole.promptIndex += 1;
-  renderParole();
-}
-
 function renderWords() {
   const prompts = state.words.prompts;
   const currentTurn = getCurrentWordTurn();
@@ -688,8 +631,6 @@ function renderWords() {
   const canAct = !!currentTurn && state.words.promptIndex < prompts.length && !!prompt;
   const recapPanel = document.getElementById('words-turn-recap');
   const liveArea = document.getElementById('words-live-area');
-
-  console.log(`[renderWords] index=${state.words.promptIndex}, prompts.length=${prompts.length}, prompt="${prompt?.substring?.(0, 30) || 'undefined'}", canAct=${canAct}`);
 
   if (recapPanel) recapPanel.style.display = 'none';
   if (liveArea) liveArea.style.display = 'block';
@@ -709,14 +650,18 @@ function renderWords() {
   actionButtons.forEach(button => { button.disabled = !canAct; });
 
   if (!currentTurn) {
-    document.getElementById('words-taboo-word').textContent = 'Nessun turno disponibile';
-    document.getElementById('words-forbidden-list').innerHTML = '';
+    const wordEl = document.getElementById('words-taboo-word');
+    const forbidEl = document.getElementById('words-forbidden-list');
+    if (wordEl) wordEl.textContent = 'Nessun turno disponibile';
+    if (forbidEl) forbidEl.innerHTML = '';
     clearInterval(state.words.turnInterval);
     return;
   }
 
-  document.getElementById('words-team-badge').textContent = currentTurn.team.name;
-  document.getElementById('words-player-name').textContent = currentTurn.player;
+  const teamBadge = document.getElementById('words-team-badge');
+  const playerName = document.getElementById('words-player-name');
+  if (teamBadge) teamBadge.textContent = currentTurn.team.name;
+  if (playerName) playerName.textContent = currentTurn.player;
 
   const onlyOneMember = !!(state.words.turnRule && state.words.turnRule.requireSingleMember);
   const singleMemberName = state.words.singleGuessMember || currentTurn.player;
@@ -738,20 +683,24 @@ function renderWords() {
   }
 
   if (state.words.promptIndex >= prompts.length || !prompt) {
-    document.getElementById('words-taboo-word').textContent = '🏁 Prompt finiti!';
-    document.getElementById('words-forbidden-list').innerHTML = '<div class="taboo-empty">Guarda i punteggi finali.</div>';
+    const wordEl = document.getElementById('words-taboo-word');
+    const forbidEl = document.getElementById('words-forbidden-list');
+    if (wordEl) wordEl.textContent = '🏁 Prompt finiti!';
+    if (forbidEl) forbidEl.innerHTML = '<div class="taboo-empty">Guarda i punteggi finali.</div>';
     clearInterval(state.words.turnInterval);
   } else {
     const parsed = parseTabooPrompt(prompt);
-    console.log(`[renderWords WORDS] Setting target="${parsed.target}", forbidden=[${parsed.forbidden.join(', ')}]`);
     const wordEl = document.getElementById('words-taboo-word');
     const forbidEl = document.getElementById('words-forbidden-list');
-    console.log(`[renderWords WORDS] wordEl=${!!wordEl}, forbidEl=${!!forbidEl}`);
-    if (wordEl) wordEl.textContent = parsed.target;
-    if (forbidEl) forbidEl.innerHTML = parsed.forbidden.map(word =>
-      `<span class="taboo-forbidden-item">${word}</span>`
-    ).join('');
-    console.log(`[renderWords WORDS] DOM updated. wordEl.textContent="${wordEl?.textContent}"`);
+    if (wordEl) {
+      wordEl.textContent = parsed.target;
+    }
+    if (forbidEl) {
+      const html = parsed.forbidden.map(word =>
+        `<span class="taboo-forbidden-item">${word}</span>`
+      ).join('');
+      forbidEl.innerHTML = html;
+    }
   }
 
   updateWordsActionButtons();
@@ -830,6 +779,9 @@ function advanceWordsPrompt(action) {
     return;
   }
 
+  // Sospendi timer prima di modificare lo state
+  clearInterval(state.words.turnInterval);
+
   if (action === 'guessed') {
     state.words.scores[currentTurn.team.name] = (state.words.scores[currentTurn.team.name] || 0) + 1;
   }
@@ -847,9 +799,7 @@ function advanceWordsPrompt(action) {
     action
   });
 
-  console.log(`[advanceWordsPrompt] Before: index=${state.words.promptIndex}, prompts.length=${state.words.prompts.length}`);
   state.words.promptIndex += 1;
-  console.log(`[advanceWordsPrompt] After: index=${state.words.promptIndex}`);
 
   if (state.words.promptIndex >= state.words.prompts.length) {
     state.words.gameExhausted = true;
@@ -857,8 +807,10 @@ function advanceWordsPrompt(action) {
     return;
   }
 
-  console.log(`[advanceWordsPrompt] Calling renderWords...`);
   renderWords();
+  
+  // Riavvia timer
+  startWordsTurnTimer();
 }
 
 function buzzWord() {

@@ -113,13 +113,6 @@ const GAMES_REGISTRY = [
     screen: "words"
   },
   {
-    id: "parole",
-    icon: "💬",
-    title: "Parole",
-    description: "Descrivi e racconta a turni",
-    screen: "parole"
-  },
-  {
     id: "alphabet",           
     icon: "🔤",
     title: "Alfabeto",

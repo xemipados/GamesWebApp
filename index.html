@@ -119,48 +119,6 @@
     </div>
   </div>
 
-  <!-- PAROLE (separato da Taboo) -->
-  <div id="screen-parole" class="screen">
-    <div class="topbar">
-      <button class="back-btn" onclick="goHome()">← Indietro</button>
-    </div>
-    <div id="parole-setup" class="setup-panel">
-      <h2>Parole</h2>
-      <p class="subtitle">Descrivi e racconta a turni</p>
-      <div class="section-label">Giocatori</div>
-      <div id="parole-players-tags"></div>
-      <div class="add-row">
-        <input type="text" id="parole-player-input" placeholder="Nome giocatore..." />
-        <button onclick="addPlayer('parole')">+</button>
-      </div>
-      <div class="section-label" style="margin-top:1.5rem;">Modalità</div>
-      <div class="category-picker">
-        <div class="category-current" id="parole-current-cat"></div>
-        <button class="category-redraw-btn" onclick="redrawCategory('parole')">Redraw</button>
-      </div>
-      <div class="add-row" style="margin-top:10px;">
-        <input type="text" id="parole-custom-cat" placeholder="Oppure scrivi una modalità..." />
-        <button onclick="setCustomCategory('parole')">Usa</button>
-      </div>
-      <button class="btn-start" onclick="startParole()">Inizia</button>
-    </div>
-    <div id="parole-game" class="game-panel" style="display:none;">
-      <div class="info-row">
-        <span class="muted-label">Turno di <strong id="parole-player-name"></strong></span>
-        <span id="parole-mode-badge" class="badge badge-purple"></span>
-      </div>
-      <div class="card-question">
-        <p id="parole-prompt"></p>
-      </div>
-      <div class="scores-block">
-        <div class="section-label">Punteggi</div>
-        <div id="parole-scores"></div>
-      </div>
-      <button class="btn-next" onclick="nextParole()">Prossimo turno →</button>
-    </div>
-  </div>
-
-
   <!-- ALFABETO -->
   <div id="screen-alphabet" class="screen">
     <div class="topbar">
