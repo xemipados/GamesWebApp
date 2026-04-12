@@ -1,0 +1,240 @@
+/* =============================================
+   PARTY GAMES — style.css
+   Modifica qui colori, font, spaziature
+   ============================================= */
+
+/* --- Font (puoi cambiare qui) --- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+/* --- Variabili principali --- */
+:root {
+  --font: 'DM Sans', sans-serif;
+
+  --bg:        #f7f6f2;
+  --surface:   #ffffff;
+  --border:    #e4e2db;
+  --text:      #1a1a1a;
+  --muted:     #888880;
+
+  --purple-bg: #EEEDFE;
+  --purple-tx: #3C3489;
+  --teal-bg:   #E1F5EE;
+  --teal-tx:   #085041;
+
+  --radius:    14px;
+  --radius-sm: 8px;
+  --max-width: 480px;
+}
+
+/* --- Reset base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Schermate --- */
+.screen { display: none; max-width: var(--max-width); margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+.screen.active { display: block; }
+
+/* --- Header home --- */
+header { text-align: center; margin-bottom: 2rem; padding-top: 1rem; }
+header h1 { font-size: 26px; font-weight: 600; }
+header p  { font-size: 14px; color: var(--muted); margin-top: 4px; }
+
+/* --- Griglia giochi --- */
+.game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.game-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.game-card:active { transform: scale(0.97); }
+.game-card .icon  { font-size: 30px; margin-bottom: 8px; }
+.game-card h3     { font-size: 15px; font-weight: 600; }
+.game-card p      { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+.game-card.add-card {
+  border-style: dashed;
+  opacity: 0.55;
+}
+
+/* --- Topbar e navigazione --- */
+.topbar { margin-bottom: 1.25rem; }
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* --- Setup panel --- */
+.setup-panel h2    { font-size: 22px; font-weight: 600; }
+.setup-panel .subtitle { font-size: 14px; color: var(--muted); margin-top: 4px; margin-bottom: 1.5rem; }
+
+.section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+/* --- Tags giocatori --- */
+.player-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  margin: 3px;
+  font-size: 13px;
+}
+.player-tag button {
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 15px; line-height: 1; padding: 0;
+}
+
+/* --- Input aggiungi giocatore --- */
+.add-row { display: flex; gap: 8px; margin-top: 8px; }
+.add-row input {
+  flex: 1;
+  padding: 10px 12px;
+  font-family: var(--font);
+  font-size: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  outline: none;
+}
+.add-row input:focus { border-color: #aaa; }
+.add-row button {
+  padding: 10px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+/* --- Pills categoria --- */
+.pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pill {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: none;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.1s;
+}
+.pill.active { background: var(--purple-bg); color: var(--purple-tx); border-color: #AFA9EC; }
+
+/* --- Bottone start --- */
+.btn-start {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 14px;
+  background: var(--text);
+  color: white;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+.btn-start:active { opacity: 0.85; }
+
+/* --- Game panel --- */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.muted-label { font-size: 13px; color: var(--muted); }
+
+.badge {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.badge-purple { background: var(--purple-bg); color: var(--purple-tx); }
+.badge-teal   { background: var(--teal-bg);   color: var(--teal-tx); }
+
+/* --- Card domanda --- */
+.card-question {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 1.5rem;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.card-question p { font-size: 16px; line-height: 1.6; }
+
+/* --- Punteggi --- */
+.scores-block { margin-bottom: 1.5rem; }
+.player-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.player-row:last-child { border-bottom: none; }
+.score-controls { display: flex; align-items: center; gap: 14px; }
+.score-btn {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font);
+}
+.score-val { font-size: 16px; font-weight: 600; min-width: 24px; text-align: center; }
+
+/* --- Bottone next --- */
+.btn-next {
+  width: 100%;
+  padding: 13px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 15px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.1s;
+}
+.btn-next:active { background: var(--bg); }

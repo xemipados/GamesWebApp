@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Party Games</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- HOME -->
+  <div id="screen-home" class="screen active">
+    <header>
+      <h1>Party Games</h1>
+      <p>Scegli un gioco</p>
+    </header>
+    <div class="game-grid" id="game-grid">
+      <!-- Le card vengono generate da js/games-registry.js -->
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← Indietro</button>
+    </div>
+    <div id="quiz-setup" class="setup-panel">
+      <h2>Quiz</h2>
+      <p class="subtitle">Rispondi correttamente e segna un punto</p>
+      <div class="section-label">Giocatori</div>
+      <div id="quiz-players-tags"></div>
+      <div class="add-row">
+        <input type="text" id="quiz-player-input" placeholder="Nome giocatore..." />
+        <button onclick="addPlayer('quiz')">+</button>
+      </div>
+      <div class="section-label" style="margin-top:1.5rem;">Categoria</div>
+      <div class="pills" id="quiz-cats"></div>
+      <button class="btn-start" onclick="startQuiz()">Inizia il quiz</button>
+    </div>
+    <div id="quiz-game" class="game-panel" style="display:none;">
+      <div class="info-row">
+        <span id="quiz-progress" class="muted-label">Domanda 1</span>
+        <span id="quiz-cat-badge" class="badge badge-purple"></span>
+      </div>
+      <div class="card-question">
+        <p id="quiz-question"></p>
+      </div>
+      <div class="scores-block">
+        <div class="section-label">Punteggi</div>
+        <div id="quiz-scores"></div>
+      </div>
+      <button class="btn-next" onclick="nextQuestion()">Prossima domanda →</button>
+    </div>
+  </div>
+
+  <!-- PAROLE -->
+  <div id="screen-words" class="screen">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">← Indietro</button>
+    </div>
+    <div id="words-setup" class="setup-panel">
+      <h2>Parole</h2>
+      <p class="subtitle">Sfide di creatività e parole</p>
+      <div class="section-label">Giocatori</div>
+      <div id="words-players-tags"></div>
+      <div class="add-row">
+        <input type="text" id="words-player-input" placeholder="Nome giocatore..." />
+        <button onclick="addPlayer('words')">+</button>
+      </div>
+      <div class="section-label" style="margin-top:1.5rem;">Modalità</div>
+      <div class="pills" id="words-cats"></div>
+      <button class="btn-start" onclick="startWords()">Inizia</button>
+    </div>
+    <div id="words-game" class="game-panel" style="display:none;">
+      <div class="info-row">
+        <span class="muted-label">Turno di <strong id="words-player-name"></strong></span>
+        <span id="words-mode-badge" class="badge badge-teal"></span>
+      </div>
+      <div class="card-question">
+        <p id="words-prompt"></p>
+      </div>
+      <div class="scores-block">
+        <div class="section-label">Punteggi</div>
+        <div id="words-scores"></div>
+      </div>
+      <button class="btn-next" onclick="nextWords()">Prossimo turno →</button>
+    </div>
+  </div>
+
+  <script src="js/games-registry.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
