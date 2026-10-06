@@ -8,12 +8,12 @@ App per giochi da fare in compagnia, accessibile da telefono via GitHub Pages.
 
 ```
 party-games/
-├── index.html              # Struttura pagine (non serve toccare)
+├── index.html              
 ├── css/
-│   └── style.css           # ✏️ Colori, font, spaziature
+│   └── style.css           
 └── js/
-    ├── games-registry.js   # ✏️ DOMANDE, PROMPT, GIOCHI → modifica qui
-    └── app.js              # Logica app (non serve toccare)
+    ├── games-registry.js   
+    └── app.js              
 ```
 
 ---
